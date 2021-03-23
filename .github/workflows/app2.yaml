@@ -1,4 +1,4 @@
-name: 'Terraform CI'
+name: 'Container CI'
 
 on:
   
@@ -19,8 +19,8 @@ jobs:
   # FAZER SOMENTE NO PULL ESSE DO DOCKER
 
 
-  terraform:
-    name: 'Terraform'
+  container:
+    name: 'Container'
     runs-on: ubuntu-latest
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
@@ -31,6 +31,12 @@ jobs:
 
     steps:
 
+    - if: github.event_name == 'pull_request'
+      name: Generate build number
+      id: buildnumber
+      uses: einaregilsson/build-number@v3 
+      with:
+        token: ${{secrets.github_token}}    
    
     - name: Check Out Repo 
       if: github.event_name == 'pull_request'
@@ -56,4 +62,4 @@ jobs:
         context: ./app2/container
         file: ./app2/container/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/app2:1
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/app2:${{ steps.buildnumber.outputs.build_number }}

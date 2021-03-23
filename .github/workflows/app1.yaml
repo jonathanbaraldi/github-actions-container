@@ -12,12 +12,7 @@ on:
     paths:
       - app1/**
 
-
 jobs:
-  
-
-  # FAZER SOMENTE NO PULL ESSE DO DOCKER
-
 
   terraform:
     name: 'Terraform'

@@ -1,7 +1,12 @@
 name: 'Container CI'
 
+
+
+# trigger
 on:
   
+  # pipeline de integracao sera executada quando houver algum push
+  # envolvendo o diretorio app1 na branch main
   push:
     branches:
       - main
@@ -12,16 +17,20 @@ on:
     paths:
       - app1/**
 
+
+
+
+# atividades
 jobs:
 
+  # cria container
   container:
     name: 'Container'
     runs-on: ubuntu-latest
-
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    
     defaults:
       run:
-        working-directory: app1
+        working-directory: app1 # especifica diretorio
         shell: bash
 
     steps:
@@ -33,9 +42,11 @@ jobs:
       with:
         token: ${{secrets.github_token}}    
    
+   
     - name: Check Out Repo 
       if: github.event_name == 'pull_request'
       uses: actions/checkout@v2
+
 
     - name: Login to Docker Hub
       if: github.event_name == 'pull_request'
@@ -44,10 +55,12 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+
     - name: Set up Docker Buildx
       if: github.event_name == 'pull_request'
       id: buildx
       uses: docker/setup-buildx-action@v1
+
 
     - name: Build and push
       if: github.event_name == 'pull_request'
